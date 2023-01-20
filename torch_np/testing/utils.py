@@ -17,8 +17,6 @@ from io import StringIO
 from tempfile import mkdtemp, mkstemp
 from warnings import WarningMessage
 
-from pytest import raises as assert_raises
-
 import torch_np as np
 from torch_np import arange, array
 from torch_np import asarray as asanyarray
@@ -31,6 +29,7 @@ __all__ = [
     "assert_array_equal",
     "assert_array_less",
     "assert_string_equal",
+    "assert_",
     "assert_array_almost_equal",
     "assert_raises",
     "build_err_msg",
@@ -435,6 +434,35 @@ def assert_almost_equal(actual, desired, decimal=7, err_msg="", verbose=True):
         pass
     if abs(desired - actual) >= np.float64(1.5 * 10.0 ** (-decimal)):
         raise AssertionError(_build_err_msg())
+
+
+def assert_raises(*args, **kwargs):
+    """
+    assert_raises(exception_class, callable, *args, **kwargs)
+    assert_raises(exception_class)
+
+    Fail unless an exception of class exception_class is thrown
+    by callable when invoked with arguments args and keyword
+    arguments kwargs. If a different type of exception is
+    thrown, it will not be caught, and the test case will be
+    deemed to have suffered an error, exactly as for an
+    unexpected exception.
+
+    Alternatively, `assert_raises` can be used as a context manager:
+
+    >>> from numpy.testing import assert_raises
+    >>> with assert_raises(ZeroDivisionError):
+    ...     1 / 0
+
+    is equivalent to
+
+    >>> def div(x, y):
+    ...     return x / y
+    >>> assert_raises(ZeroDivisionError, div, 1, 0)
+
+    """
+    __tracebackhide__ = True  # Hide traceback for py.test
+    return _d.assertRaises(*args, **kwargs)
 
 
 def assert_approx_equal(actual, desired, significant=7, err_msg="", verbose=True):
