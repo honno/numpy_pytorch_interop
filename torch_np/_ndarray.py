@@ -1,5 +1,4 @@
 import functools
-from typing import SupportsIndex
 
 import torch
 
@@ -514,17 +513,9 @@ class ndarray:
     ### indexing ###
     def __getitem__(self, *args, **kwds):
         t_args = _helpers.to_tensors(*args)
-        try:
-            t = self._tensor.__getitem__(*t_args, **kwds)
-        except TypeError as e:
-            for a in args[0]:
-                if isinstance(a, slice):
-                    for v in [a.start, a.stop, a.step]:
-                        if not isinstance(v, SupportsIndex):
-                            raise IndexError(str(e)) from e
-            else:
-                raise e
-        return ndarray._from_tensor_and_base(t, self)
+        return ndarray._from_tensor_and_base(
+            self._tensor.__getitem__(*t_args, **kwds), self
+        )
 
     def __setitem__(self, index, value):
         value = asarray(value).get()
