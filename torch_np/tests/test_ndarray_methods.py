@@ -321,9 +321,9 @@ class TestArgmaxArgminCommon:
         assert_equal(out1, out2)
 
     @pytest.mark.xfail(reason="out=... as a positional arg")
-    @pytest.mark.parametrize('arr_method, np_method',
-        [('argmax', np.argmax),
-         ('argmin', np.argmin)])
+    @pytest.mark.parametrize(
+        "arr_method, np_method", [("argmax", np.argmax), ("argmin", np.argmin)]
+    )
     def test_np_vs_ndarray_positional(self, arr_method, np_method):
         a = np.arange(6).reshape((2, 3))
         arg_method = getattr(a, arr_method)
@@ -333,7 +333,6 @@ class TestArgmaxArgminCommon:
         out2 = np.zeros(2, dtype=int)
         assert_equal(arg_method(1, out1), np_method(a, 1, out2))
         assert_equal(out1, out2)
-
 
 
 class TestArgmax:

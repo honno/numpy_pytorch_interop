@@ -50,4 +50,3 @@ remainder = deco_ufunc_from_impl(_ufunc_impl.remainder)
 right_shift = deco_ufunc_from_impl(_ufunc_impl.right_shift)
 subtract = deco_ufunc_from_impl(_ufunc_impl.subtract)
 divide = deco_ufunc_from_impl(_ufunc_impl.divide)
-
