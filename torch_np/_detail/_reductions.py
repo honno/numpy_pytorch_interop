@@ -5,15 +5,14 @@ Anything here only deals with torch objects, e.g. "dtype" is a torch.dtype insta
 """
 
 import torch
-from . import _util
-from . import _scalar_types
+
+from . import _scalar_types, _util
 
 NoValue = None
 
 
 def _atleast_float(dtype, other_dtype):
-    """Cast bools and ints and floats to a default float; complex to default complex.
-    """
+    """Cast bools and ints and floats to a default float; complex to default complex."""
     if dtype is None:
         dtype = other_dtype
     if not dtype.is_floating_point:
@@ -38,6 +37,7 @@ def argmax(tensor, axis=None, out=None, *, keepdims=NoValue):
     axis = _util.allow_only_single_axis(axis)
     tensor = torch.argmax(tensor, axis)
     return tensor
+
 
 def argmin(tensor, axis=None, out=None, *, keepdims=NoValue):
     axis = _util.allow_only_single_axis(axis)
@@ -71,8 +71,7 @@ def all(tensor, axis=None, *, where=NoValue):
     return result
 
 
-def max(tensor, axis=None, initial=NoValue,
-         where=NoValue):
+def max(tensor, axis=None, initial=NoValue, where=NoValue):
     if where is not None:
         raise NotImplementedError
     if initial is not None:
@@ -162,4 +161,3 @@ def var(tensor, axis=None, dtype=None, ddof=0, *, where=NoValue):
     result = tensor.var(dim=axis, correction=ddof)
 
     return result
-
