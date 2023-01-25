@@ -131,9 +131,23 @@ def allow_only_single_axis(axis):
 
 def to_tensors(*inputs):
     """Convert all ndarrays from `inputs` to tensors."""
-    return tuple(
-        [value.get() if isinstance(value, ndarray) else value for value in inputs]
-    )
+    if len(inputs) == 0:
+        return ValueError()
+    elif len(inputs) == 1:
+        input_ = inputs[0]
+        if isinstance(input_, ndarray):
+            return input_.get()
+        elif isinstance(input_, tuple):
+            result = []
+            for sub_input in input_:
+                sub_result = to_tensors(sub_input)
+                result.append(sub_result)
+            return tuple(result)
+        else:
+            return input_
+    else:
+        assert isinstance(inputs, tuple)  # sanity check
+        return to_tensors(inputs)
 
 
 def float_or_default(dtype, self_dtype, enforce_float=False):

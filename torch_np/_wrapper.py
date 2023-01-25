@@ -232,6 +232,8 @@ def empty_like(prototype, dtype=None, order="K", subok=False, shape=None):
 
 def full(shape, fill_value, dtype=None, order="C", *, like=None):
     _util.subok_not_ok(like)
+    if isinstance(shape, int):
+        shape = (shape,)
     if order != "C":
         raise NotImplementedError
     if isinstance(fill_value, ndarray):

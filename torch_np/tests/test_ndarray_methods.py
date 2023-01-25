@@ -1,11 +1,18 @@
 import itertools
 
 import pytest
-from pytest import raises as assert_raises
 
 # import numpy as np
+import torch
+from hypothesis import given
+from hypothesis import strategies as st
+from pytest import raises as assert_raises
+
 import torch_np as np
+from torch_np._ndarray import ndarray
 from torch_np.testing import assert_equal
+
+from . import xps
 
 
 class TestIndexing:
@@ -21,6 +28,30 @@ class TestIndexing:
         a[0, 0] = 8
         assert isinstance(a, np.ndarray)
         assert_equal(a, [[8, 2, 3], [4, 5, 6]])
+
+
+def integer_array_indices(shape, result_shape) -> st.SearchStrategy[tuple]:
+    # See hypothesis.extra.numpy.integer_array_indices()
+    # n.b. result_shape only accepts a shape, as opposed to only accepting a strategy
+    def array_for(index_shape, size):
+        return xps.arrays(
+            dtype=xps.integer_dtypes(),
+            shape=index_shape,
+            elements=st.integers(-size, size - 1),
+        )
+
+    return st.tuples(*(array_for(result_shape, size) for size in shape))
+
+
+@given(
+    x=xps.arrays(dtype=xps.integer_dtypes(), shape=xps.array_shapes()),
+    data=st.data(),
+)
+def test_integer_indexing(x, data):
+    result_shape = data.draw(xps.array_shapes(), label="result_shape")
+    idx = data.draw(integer_array_indices(x.shape, result_shape), label="idx")
+    result = x[idx]
+    assert result.shape == result_shape
 
 
 class TestReshape:
