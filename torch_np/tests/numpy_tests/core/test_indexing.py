@@ -4,12 +4,13 @@ import functools
 import operator
 
 import pytest
+from pytest import raises as assert_raises
 
 import torch_np as np
 # from numpy.core._multiarray_tests import array_indexing  # numpy implements this in C
 from itertools import product
 from torch_np.testing import (
-    assert_, assert_equal, assert_raises, assert_raises_regex,
+    assert_, assert_equal, assert_raises_regex,
     assert_array_equal, assert_warns, HAS_REFCOUNT, IS_WASM
     )
 
